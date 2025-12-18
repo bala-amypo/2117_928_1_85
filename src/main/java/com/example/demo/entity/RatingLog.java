@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "rating_logs")
 public class RatingLog {
 
     @Id
@@ -11,14 +12,26 @@ public class RatingLog {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "property_id")
     private Property property;
 
     private String message;
 
     private LocalDateTime loggedAt;
 
+    @PrePersist
+    public void onCreate() {
+        this.loggedAt = LocalDateTime.now();
+    }
+
+    // ===== GETTERS & SETTERS =====
+
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Property getProperty() {
