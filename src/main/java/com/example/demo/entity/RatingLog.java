@@ -6,41 +6,41 @@ import java.time.LocalDateTime;
 @Entity
 public class RatingLog {
 
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-private Long propertyId;
-private String message;
-private LocalDateTime loggedAt;
+    @ManyToOne
+    private Property property;
 
-public Long getId() {
-return id;
+    private String message;
+    private LocalDateTime loggedAt;
+
+    public Long getId() {
+        return id;
+    }
+
+    public Property getProperty() {
+        return property;
+    }
+
+    public void setProperty(Property property) {
+        this.property = property;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public LocalDateTime getLoggedAt() {
+        return loggedAt;
+    }
+
+    public void setLoggedAt(LocalDateTime loggedAt) {
+        this.loggedAt = loggedAt;
+    }
 }
-
-public Long getPropertyId() {
-return propertyId;
-}
-
-public void setPropertyId(Long propertyId) {
-this.propertyId = propertyId;
-}
-
-public String getMessage() {
-return message;
-}
-
-public void setMessage(String message) {
-this.message = message;
-}
-
-public LocalDateTime getLoggedAt() {
-return loggedAt;
-}
-
-public void setLoggedAt(LocalDateTime loggedAt) {
-this.loggedAt = loggedAt;
-}
-}
-
-
