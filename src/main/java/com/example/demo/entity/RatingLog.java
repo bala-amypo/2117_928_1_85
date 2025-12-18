@@ -10,26 +10,37 @@ public class RatingLog {
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 private Long id;
 
-@ManyToOne
-private Property property;
-
+private Long propertyId;
 private String message;
-
 private LocalDateTime loggedAt;
 
-@PrePersist
-public void onCreate() {
-loggedAt = LocalDateTime.now();
+public Long getId() {
+return id;
 }
 
-public Long getId() { return id; }
-public void setId(Long id) { this.id = id; }
-
-public Property getProperty() { return property; }
-public void setProperty(Property property) { this.property = property; }
-
-public String getMessage() { return message; }
-public void setMessage(String message) { this.message = message; }
-
-public LocalDateTime getLoggedAt() { return loggedAt; }
+public Long getPropertyId() {
+return propertyId;
 }
+
+public void setPropertyId(Long propertyId) {
+this.propertyId = propertyId;
+}
+
+public String getMessage() {
+return message;
+}
+
+public void setMessage(String message) {
+this.message = message;
+}
+
+public LocalDateTime getLoggedAt() {
+return loggedAt;
+}
+
+public void setLoggedAt(LocalDateTime loggedAt) {
+this.loggedAt = loggedAt;
+}
+}
+
+

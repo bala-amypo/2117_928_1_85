@@ -10,30 +10,44 @@ public class RatingResult {
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 private Long id;
 
-@OneToOne
-private Property property;
-
+private Long propertyId;
 private Double finalRating;
 private String ratingCategory;
-
 private LocalDateTime ratedAt;
 
-@PrePersist
-public void onCreate() {
-ratedAt = LocalDateTime.now();
+public Long getId() {
+return id;
 }
 
-public Long getId() { return id; }
-public void setId(Long id) { this.id = id; }
+public Long getPropertyId() {
+return propertyId;
+}
 
-public Property getProperty() { return property; }
-public void setProperty(Property property) { this.property = property; }
+public void setPropertyId(Long propertyId) {
+this.propertyId = propertyId;
+}
 
-public Double getFinalRating() { return finalRating; }
-public void setFinalRating(Double finalRating) { this.finalRating = finalRating; }
+public Double getFinalRating() {
+return finalRating;
+}
 
-public String getRatingCategory() { return ratingCategory; }
-public void setRatingCategory(String ratingCategory) { this.ratingCategory = ratingCategory; }
+public void setFinalRating(Double finalRating) {
+this.finalRating = finalRating;
+}
 
-public LocalDateTime getRatedAt() { return ratedAt; }
+public String getRatingCategory() {
+return ratingCategory;
+}
+
+public void setRatingCategory(String ratingCategory) {
+this.ratingCategory = ratingCategory;
+}
+
+public LocalDateTime getRatedAt() {
+return ratedAt;
+}
+
+public void setRatedAt(LocalDateTime ratedAt) {
+this.ratedAt = ratedAt;
+}
 }
