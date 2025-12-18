@@ -23,6 +23,3 @@ List<Property> findByCity(String city);
 
 
 
-public interface RatingLogRepository extends JpaRepository<RatingLog, Long> {
-List<RatingLog> findByPropertyId(Long propertyId);
-}
