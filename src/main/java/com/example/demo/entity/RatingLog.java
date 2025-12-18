@@ -14,6 +14,7 @@ public class RatingLog {
     private Property property;
 
     private String message;
+
     private LocalDateTime loggedAt;
 
     public Long getId() {
