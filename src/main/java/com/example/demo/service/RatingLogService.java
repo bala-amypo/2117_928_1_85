@@ -5,7 +5,13 @@ import java.util.List;
 
 public interface RatingLogService {
 
-    void addLog(Long propertyId, String message);
+    RatingLog save(RatingLog log);
 
-    List<RatingLog> getLogsByProperty(Long propertyId);
+    List<RatingLog> getAll();
+
+    RatingLog getById(Long id);
+
+    RatingLog update(Long id, RatingLog log);
+
+    void delete(Long id);
 }
