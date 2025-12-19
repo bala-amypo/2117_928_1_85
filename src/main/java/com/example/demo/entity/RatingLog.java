@@ -11,17 +11,26 @@ public class RatingLog {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "property_id")
     private Property property;
 
     private String message;
 
     private LocalDateTime loggedAt;
 
-    // ===== GETTERS & SETTERS =====
+    @PrePersist
+    public void onCreate() {
+        loggedAt = LocalDateTime.now();
+    }
+
+    public RatingLog() {
+    }
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Property getProperty() {

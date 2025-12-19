@@ -14,11 +14,25 @@ public class RatingResult {
     private Property property;
 
     private Double finalRating;
+
     private String ratingCategory;
+
     private LocalDateTime ratedAt;
+
+    @PrePersist
+    public void onCreate() {
+        ratedAt = LocalDateTime.now();
+    }
+
+    public RatingResult() {
+    }
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Property getProperty() {

@@ -1,44 +1,84 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import java.util.List;
 
 @Entity
 public class Property {
 
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-private String title;
-private String address;
-private String city;
+    private String title;
 
-@Min(1)
-private Double price;
+    private String address;
 
-@Min(100)
-private Double areaSqFt;
+    private String city;
 
-@OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
-private List<RatingLog> ratingLogs;
+    private Double price;
 
-public Long getId() { return id; }
-public void setId(Long id) { this.id = id; }
+    private Double areaSqft;
 
-public String getTitle() { return title; }
-public void setTitle(String title) { this.title = title; }
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RatingLog> ratingLogs;
 
-public String getAddress() { return address; }
-public void setAddress(String address) { this.address = address; }
+    public Property() {
+    }
 
-public String getCity() { return city; }
-public void setCity(String city) { this.city = city; }
+    public Long getId() {
+        return id;
+    }
 
-public Double getPrice() { return price; }
-public void setPrice(Double price) { this.price = price; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-public Double getAreaSqFt() { return areaSqFt; }
-public void setAreaSqFt(Double areaSqFt) { this.areaSqFt = areaSqFt; }
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Double getAreaSqft() {
+        return areaSqft;
+    }
+
+    public void setAreaSqft(Double areaSqft) {
+        this.areaSqft = areaSqft;
+    }
+
+    public List<RatingLog> getRatingLogs() {
+        return ratingLogs;
+    }
+
+    public void setRatingLogs(List<RatingLog> ratingLogs) {
+        this.ratingLogs = ratingLogs;
+    }
 }
