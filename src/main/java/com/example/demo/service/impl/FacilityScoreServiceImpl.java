@@ -1,33 +1,32 @@
-package com.example.demo.serviceimpl;
+package com.example.demo.service.impl;
 
-import com.example.demo.entity.FacilityScore;
-import com.example.demo.repository.FacilityScoreRepository;
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
 import com.example.demo.service.FacilityScoreService;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 public class FacilityScoreServiceImpl implements FacilityScoreService {
 
-private final FacilityScoreRepository repo;
+    private final FacilityScoreRepository scoreRepository;
+    private final PropertyRepository propertyRepository;
 
-public FacilityScoreServiceImpl(FacilityScoreRepository repo) { this.repo = repo; }
+    public FacilityScoreServiceImpl(FacilityScoreRepository scoreRepository, PropertyRepository propertyRepository) {
+        this.scoreRepository = scoreRepository;
+        this.propertyRepository = propertyRepository;
+    }
 
-public FacilityScore save(FacilityScore f) { return repo.save(f); }
+    @Override
+    public FacilityScore addScore(Long propertyId, FacilityScore score) {
+        Property property = propertyRepository.findById(propertyId).orElseThrow();
+        score.setProperty(property);
+        return scoreRepository.save(score);
+    }
 
-public List<FacilityScore> getAll() { return repo.findAll(); }
-
-public FacilityScore getById(Long id) { return repo.findById(id).orElse(null); }
-
-public FacilityScore update(Long id, FacilityScore f) {
-FacilityScore fs = getById(id);
-if (fs == null) return null;
-fs.setSchoolProximity(f.getSchoolProximity());
-fs.setHospitalProximity(f.getHospitalProximity());
-fs.setTransportAccess(f.getTransportAccess());
-fs.setSafetyScore(f.getSafetyScore());
-return repo.save(fs);
-}
-
-public void delete(Long id) { repo.deleteById(id); }
+    @Override
+    public FacilityScore getScoreByProperty(Long propertyId) {
+        return scoreRepository.findAll().stream()
+                .filter(s -> s.getProperty().getId().equals(propertyId))
+                .findFirst().orElseThrow();
+    }
 }

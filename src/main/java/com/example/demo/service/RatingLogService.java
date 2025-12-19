@@ -4,14 +4,6 @@ import com.example.demo.entity.RatingLog;
 import java.util.List;
 
 public interface RatingLogService {
-
-    RatingLog save(RatingLog log);
-
-    List<RatingLog> getAll();
-
-    RatingLog getById(Long id);
-
-    RatingLog update(Long id, RatingLog log);
-
-    void delete(Long id);
+    RatingLog addLog(Long propertyId, String message);
+    List<RatingLog> getLogs(Long propertyId);
 }
