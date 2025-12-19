@@ -2,29 +2,32 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.RatingLog;
 import com.example.demo.service.RatingLogService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/rating-logs")
+@RequestMapping("/logs")
+@Tag(name = "Rating Logs")
 public class RatingLogController {
 
-private final RatingLogService service;
+    private final RatingLogService service;
 
-public RatingLogController(RatingLogService service) { this.service = service; }
+    public RatingLogController(RatingLogService service) {
+        this.service = service;
+    }
 
-@PostMapping
-public RatingLog create(@RequestBody RatingLog r) { return service.save(r); }
+    @PostMapping("/{propertyId}")
+    @Operation(summary = "Add rating log")
+    public RatingLog add(@PathVariable Long propertyId,
+                         @RequestParam String message) {
+        return service.addLog(propertyId, message);
+    }
 
-@GetMapping
-public List<RatingLog> getAll() { return service.getAll(); }
-
-@GetMapping("/{id}")
-public RatingLog get(@PathVariable Long id) { return service.getById(id); }
-
-@PutMapping("/{id}")
-public RatingLog update(@PathVariable Long id, @RequestBody RatingLog r) { return service.update(id, r); }
-
-@DeleteMapping("/{id}")
-public void delete(@PathVariable Long id) { service.delete(id); }
+    @GetMapping("/property/{propertyId}")
+    @Operation(summary = "View logs for property")
+    public List<RatingLog> logs(@PathVariable Long propertyId) {
+        return service.getLogs(propertyId);
+    }
 }

@@ -2,29 +2,31 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.FacilityScore;
 import com.example.demo.service.FacilityScoreService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
-@RequestMapping("/facility-scores")
+@RequestMapping("/scores")
+@Tag(name = "Facility Score")
 public class FacilityScoreController {
 
-private final FacilityScoreService service;
+    private final FacilityScoreService service;
 
-public FacilityScoreController(FacilityScoreService service) { this.service = service; }
+    public FacilityScoreController(FacilityScoreService service) {
+        this.service = service;
+    }
 
-@PostMapping
-public FacilityScore create(@RequestBody FacilityScore f) { return service.save(f); }
+    @PostMapping("/{propertyId}")
+    @Operation(summary = "Submit facility score")
+    public FacilityScore addScore(@PathVariable Long propertyId,
+                                  @RequestBody FacilityScore score) {
+        return service.addScore(propertyId, score);
+    }
 
-@GetMapping
-public List<FacilityScore> getAll() { return service.getAll(); }
-
-@GetMapping("/{id}")
-public FacilityScore get(@PathVariable Long id) { return service.getById(id); }
-
-@PutMapping("/{id}")
-public FacilityScore update(@PathVariable Long id, @RequestBody FacilityScore f) { return service.update(id, f); }
-
-@DeleteMapping("/{id}")
-public void delete(@PathVariable Long id) { service.delete(id); }
+    @GetMapping("/{propertyId}")
+    @Operation(summary = "Get facility score by property")
+    public FacilityScore getScore(@PathVariable Long propertyId) {
+        return service.getScoreByProperty(propertyId);
+    }
 }

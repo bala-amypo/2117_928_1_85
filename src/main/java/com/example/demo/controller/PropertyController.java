@@ -2,29 +2,31 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Property;
 import com.example.demo.service.PropertyService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
 @RequestMapping("/properties")
+@Tag(name = "Property")
 public class PropertyController {
 
-private final PropertyService service;
+    private final PropertyService service;
 
-public PropertyController(PropertyService service) { this.service = service; }
+    public PropertyController(PropertyService service) {
+        this.service = service;
+    }
 
-@PostMapping
-public Property create(@RequestBody Property property) { return service.save(property); }
+    @PostMapping
+    @Operation(summary = "Add property")
+    public Property addProperty(@RequestBody Property property) {
+        return service.addProperty(property);
+    }
 
-@GetMapping
-public List<Property> getAll() { return service.getAll(); }
-
-@GetMapping("/{id}")
-public Property get(@PathVariable Long id) { return service.getById(id); }
-
-@PutMapping("/{id}")
-public Property update(@PathVariable Long id, @RequestBody Property property) { return service.update(id, property); }
-
-@DeleteMapping("/{id}")
-public void delete(@PathVariable Long id) { service.delete(id); }
+    @GetMapping
+    @Operation(summary = "List all properties")
+    public List<Property> getAll() {
+        return service.getAllProperties();
+    }
 }

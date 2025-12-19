@@ -2,29 +2,30 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.RatingResult;
 import com.example.demo.service.RatingResultService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
-@RequestMapping("/rating-results")
+@RequestMapping("/ratings")
+@Tag(name = "Rating Result")
 public class RatingResultController {
 
-private final RatingResultService service;
+    private final RatingResultService service;
 
-public RatingResultController(RatingResultService service) { this.service = service; }
+    public RatingResultController(RatingResultService service) {
+        this.service = service;
+    }
 
-@PostMapping
-public RatingResult create(@RequestBody RatingResult r) { return service.save(r); }
+    @PostMapping("/generate/{propertyId}")
+    @Operation(summary = "Generate rating result")
+    public RatingResult generate(@PathVariable Long propertyId) {
+        return service.generateRating(propertyId);
+    }
 
-@GetMapping
-public List<RatingResult> getAll() { return service.getAll(); }
-
-@GetMapping("/{id}")
-public RatingResult get(@PathVariable Long id) { return service.getById(id); }
-
-@PutMapping("/{id}")
-public RatingResult update(@PathVariable Long id, @RequestBody RatingResult r) { return service.update(id, r); }
-
-@DeleteMapping("/{id}")
-public void delete(@PathVariable Long id) { service.delete(id); }
+    @GetMapping("/property/{propertyId}")
+    @Operation(summary = "Get rating result by property")
+    public RatingResult get(@PathVariable Long propertyId) {
+        return service.getRating(propertyId);
+    }
 }
