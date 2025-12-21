@@ -1,7 +1,8 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.util.List;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Property {
@@ -10,14 +11,14 @@ public class Property {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     private String title;
-    private String address;
-    private String city;
-    private Double price;
-    private Double areaSqft;
 
-    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RatingLog> ratingLogs;
+    @NotBlank
+    private String city;
+
+    @NotNull
+    private Double price;
 
     public Long getId() {
         return id;
@@ -35,14 +36,6 @@ public class Property {
         this.title = title;
     }
  
-    public String getAddress() {
-        return address;
-    }
- 
-    public void setAddress(String address) {
-        this.address = address;
-    }
- 
     public String getCity() {
         return city;
     }
@@ -57,21 +50,5 @@ public class Property {
  
     public void setPrice(Double price) {
         this.price = price;
-    }
- 
-    public Double getAreaSqft() {
-        return areaSqft;
-    }
- 
-    public void setAreaSqft(Double areaSqft) {
-        this.areaSqft = areaSqft;
-    }
- 
-    public List<RatingLog> getRatingLogs() {
-        return ratingLogs;
-    }
- 
-    public void setRatingLogs(List<RatingLog> ratingLogs) {
-        this.ratingLogs = ratingLogs;
     }
 }

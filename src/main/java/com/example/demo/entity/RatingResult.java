@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 public class RatingResult {
@@ -13,14 +12,8 @@ public class RatingResult {
     @OneToOne
     private Property property;
 
-    private Double finalRating;
-    private String ratingCategory;
-    private LocalDateTime ratedAt;
-
-    @PrePersist
-    public void onCreate() {
-        ratedAt = LocalDateTime.now();
-    }
+    private Double rating;
+    private String category;
 
     public Long getId() {
         return id;
@@ -38,27 +31,19 @@ public class RatingResult {
         this.property = property;
     }
  
-    public Double getFinalRating() {
-        return finalRating;
+    public Double getRating() {
+        return rating;
     }
  
-    public void setFinalRating(Double finalRating) {
-        this.finalRating = finalRating;
+    public void setRating(Double rating) {
+        this.rating = rating;
     }
  
-    public String getRatingCategory() {
-        return ratingCategory;
+    public String getCategory() {
+        return category;
     }
  
-    public void setRatingCategory(String ratingCategory) {
-        this.ratingCategory = ratingCategory;
-    }
- 
-    public LocalDateTime getRatedAt() {
-        return ratedAt;
-    }
- 
-    public void setRatedAt(LocalDateTime ratedAt) {
-        this.ratedAt = ratedAt;
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

@@ -3,6 +3,5 @@ package com.example.demo.service;
 import com.example.demo.entity.RatingResult;
 
 public interface RatingResultService {
-    RatingResult generateRating(Long propertyId);
-    RatingResult getRating(Long propertyId);
+    RatingResult generate(Long propertyId);
 }

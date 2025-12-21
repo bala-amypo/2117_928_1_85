@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class FacilityScore {
@@ -12,23 +13,17 @@ public class FacilityScore {
     private Long id;
 
     @ManyToOne
+    @NotNull
     private Property property;
 
-    @Min(0)
-    @Max(10)
-    private Integer schoolProximity;
+    @Min(0) @Max(10)
+    private Integer school;
 
-    @Min(0)
-    @Max(10)
-    private Integer hospitalProximity;
+    @Min(0) @Max(10)
+    private Integer hospital;
 
-    @Min(0)
-    @Max(10)
-    private Integer transportAccess;
-
-    @Min(0)
-    @Max(10)
-    private Integer safetyScore;
+    @Min(0) @Max(10)
+    private Integer transport;
 
     public Long getId() {
         return id;
@@ -46,35 +41,27 @@ public class FacilityScore {
         this.property = property;
     }
  
-    public Integer getSchoolProximity() {
-        return schoolProximity;
+    public Integer getSchool() {
+        return school;
     }
  
-    public void setSchoolProximity(Integer schoolProximity) {
-        this.schoolProximity = schoolProximity;
+    public void setSchool(Integer school) {
+        this.school = school;
     }
  
-    public Integer getHospitalProximity() {
-        return hospitalProximity;
+    public Integer getHospital() {
+        return hospital;
     }
  
-    public void setHospitalProximity(Integer hospitalProximity) {
-        this.hospitalProximity = hospitalProximity;
+    public void setHospital(Integer hospital) {
+        this.hospital = hospital;
     }
  
-    public Integer getTransportAccess() {
-        return transportAccess;
+    public Integer getTransport() {
+        return transport;
     }
  
-    public void setTransportAccess(Integer transportAccess) {
-        this.transportAccess = transportAccess;
-    }
- 
-    public Integer getSafetyScore() {
-        return safetyScore;
-    }
- 
-    public void setSafetyScore(Integer safetyScore) {
-        this.safetyScore = safetyScore;
+    public void setTransport(Integer transport) {
+        this.transport = transport;
     }
 }
