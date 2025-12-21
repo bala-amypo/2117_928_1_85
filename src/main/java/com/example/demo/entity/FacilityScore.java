@@ -3,65 +3,80 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
+@Table(name = "facility_scores")
 public class FacilityScore {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @NotNull
+    @OneToOne
+    @JoinColumn(name = "property_id", nullable = false, unique = true)
     private Property property;
 
-    @Min(0) @Max(10)
-    private Integer school;
+    @Min(0)
+    @Max(10)
+    private Integer schoolProximity;
 
-    @Min(0) @Max(10)
-    private Integer hospital;
+    @Min(0)
+    @Max(10)
+    private Integer hospitalProximity;
 
-    @Min(0) @Max(10)
-    private Integer transport;
+    @Min(0)
+    @Max(10)
+    private Integer transportAccess;
+
+    @Min(0)
+    @Max(10)
+    private Integer safetyScore;
 
     public Long getId() {
         return id;
     }
- 
+
     public void setId(Long id) {
         this.id = id;
     }
- 
+
     public Property getProperty() {
         return property;
     }
- 
+
     public void setProperty(Property property) {
         this.property = property;
     }
- 
-    public Integer getSchool() {
-        return school;
+
+    public Integer getSchoolProximity() {
+        return schoolProximity;
     }
- 
-    public void setSchool(Integer school) {
-        this.school = school;
+
+    public void setSchoolProximity(Integer schoolProximity) {
+        this.schoolProximity = schoolProximity;
     }
- 
-    public Integer getHospital() {
-        return hospital;
+
+    public Integer getHospitalProximity() {
+        return hospitalProximity;
     }
- 
-    public void setHospital(Integer hospital) {
-        this.hospital = hospital;
+
+    public void setHospitalProximity(Integer hospitalProximity) {
+        this.hospitalProximity = hospitalProximity;
     }
- 
-    public Integer getTransport() {
-        return transport;
+
+    public Integer getTransportAccess() {
+        return transportAccess;
     }
- 
-    public void setTransport(Integer transport) {
-        this.transport = transport;
+
+    public void setTransportAccess(Integer transportAccess) {
+        this.transportAccess = transportAccess;
+    }
+
+    public Integer getSafetyScore() {
+        return safetyScore;
+    }
+
+    public void setSafetyScore(Integer safetyScore) {
+        this.safetyScore = safetyScore;
     }
 }
