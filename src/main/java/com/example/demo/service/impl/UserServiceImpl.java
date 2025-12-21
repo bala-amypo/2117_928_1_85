@@ -1,35 +1,46 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.User;
-import com.example.demo.exception.BadRequestException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
-    private final BCryptPasswordEncoder encoder;
 
-    public UserServiceImpl(UserRepository repository, BCryptPasswordEncoder encoder) {
+    public UserServiceImpl(UserRepository repository) {
         this.repository = repository;
-        this.encoder = encoder;
     }
 
     @Override
-    public User register(User user) {
-        if (repository.findByEmail(user.getEmail()).isPresent()) {
-            throw new BadRequestException("Email already in use");
-        }
-        user.setPassword(encoder.encode(user.getPassword()));
-        user.setRole("ANALYST");
+    public User create(User user) {
         return repository.save(user);
     }
 
     @Override
-    public User findByEmail(String email) {
-        return repository.findByEmail(email).orElseThrow();
+    public List<User> getAll() {
+        return repository.findAll();
+    }
+
+    @Override
+    public User getById(Long id) {
+        return repository.findById(id).orElseThrow();
+    }
+
+    @Override
+    public User update(Long id, User user) {
+        User existing = repository.findById(id).orElseThrow();
+        existing.setName(user.getName());
+        existing.setEmail(user.getEmail());
+        existing.setPassword(user.getPassword());
+        return repository.save(existing);
+    }
+
+    @Override
+    public void delete(Long id) {
+        repository.deleteById(id);
     }
 }
