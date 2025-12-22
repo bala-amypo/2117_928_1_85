@@ -11,7 +11,7 @@ import java.security.MessageDigest;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository repo;
+    private final  repo;
 
     public UserServiceImpl(UserRepository repo) {
         this.repo = repo;
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
         if (!user.getPassword().equals(hash(password))) {
             throw new RuntimeException("Invalid password");
         }
-
+UserRepository
         return user;
     }
 
