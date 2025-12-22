@@ -3,14 +3,15 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repo;
-    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public UserServiceImpl(UserRepository repo) {
         this.repo = repo;
@@ -23,7 +24,7 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Email already exists");
         }
 
-        user.setPassword(encoder.encode(user.getPassword()));
+        user.setPassword(hash(user.getPassword()));
         user.setRole("ANALYST");
 
         return repo.save(user);
@@ -35,10 +36,25 @@ public class UserServiceImpl implements UserService {
         User user = repo.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Invalid email"));
 
-        if (!encoder.matches(password, user.getPassword())) {
+        if (!user.getPassword().equals(hash(password))) {
             throw new RuntimeException("Invalid password");
         }
 
         return user;
+    }
+
+
+    private String hash(String value) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] bytes = md.digest(value.getBytes(StandardCharsets.UTF_8));
+            StringBuilder sb = new StringBuilder();
+            for (byte b : bytes) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
