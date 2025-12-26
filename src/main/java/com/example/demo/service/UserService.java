@@ -1,28 +1,48 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.User;
-import com.example.demo.exception.BadRequestException;
 import com.example.demo.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
-
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-
-    public UserService(UserRepository userRepository,
-                       PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    public User register(User user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new BadRequestException("Email already exists");
-        }
+    
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
+    public User createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
+    }
+    
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+    
+    public Optional<User> getUserById(Long id) {
+        return userRepository.findById(id);
+    }
+    
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+    
+    public User updateUser(User user) {
+        return userRepository.save(user);
+    }
+    
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
+    
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }
