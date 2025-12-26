@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.*;
-import com.example.demo.repository.*;
+import com.example.demo.entity.Property;
+import com.example.demo.repository.PropertyRepository;
 import org.springframework.stereotype.Service;
 
 @Service

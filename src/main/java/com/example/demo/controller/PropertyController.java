@@ -2,9 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Property;
 import com.example.demo.repository.PropertyRepository;
-import com.example.demo.service.PropertyService;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,23 +11,19 @@ import java.util.List;
 @RequestMapping("/properties")
 public class PropertyController {
 
-    private final PropertyService propertyService;
-    private final PropertyRepository propertyRepository;
+    private final PropertyRepository repo;
 
-    public PropertyController(PropertyService propertyService,
-                              PropertyRepository propertyRepository) {
-        this.propertyService = propertyService;
-        this.propertyRepository = propertyRepository;
+    public PropertyController(PropertyRepository repo) {
+        this.repo = repo;
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Property create(@RequestBody @Valid Property property) {
-        return propertyService.addProperty(property);
+    public ResponseEntity<?> add(@RequestBody Property p) {
+        return ResponseEntity.status(201).body(repo.save(p));
     }
 
     @GetMapping
     public List<Property> list() {
-        return propertyRepository.findAll();
+        return repo.findAll();
     }
 }

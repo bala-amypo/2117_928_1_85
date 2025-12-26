@@ -2,6 +2,7 @@ package com.example.demo.security;
 
 import com.example.demo.entity.User;
 import io.jsonwebtoken.*;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import java.util.*;
 
@@ -21,6 +22,7 @@ public class JwtTokenProvider {
     }
 
     public Long getUserIdFromToken(String token) {
-        return ((Number) Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("id")).longValue();
+        return ((Number) Jwts.parser().setSigningKey(secret)
+                .parseClaimsJws(token).getBody().get("id")).longValue();
     }
 }
