@@ -1,9 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.FacilityScore;
-import com.example.demo.entity.Property;
-import com.example.demo.repository.FacilityScoreRepository;
-import com.example.demo.repository.PropertyRepository;
+import com.example.demo.service.FacilityScoreService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,27 +9,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/scores")
 public class FacilityScoreController {
 
-    private final FacilityScoreRepository repo;
-    private final PropertyRepository propertyRepo;
+    private final FacilityScoreService facilityScoreService;
 
-    public FacilityScoreController(FacilityScoreRepository repo, PropertyRepository propertyRepo) {
-        this.repo = repo;
-        this.propertyRepo = propertyRepo;
+    public FacilityScoreController(FacilityScoreService facilityScoreService) {
+        this.facilityScoreService = facilityScoreService;
     }
 
     @PostMapping("/{propertyId}")
     @ResponseStatus(HttpStatus.CREATED)
     public FacilityScore create(@PathVariable Long propertyId,
-                                @RequestBody FacilityScore s) {
-        Property p = propertyRepo.findById(propertyId).orElseThrow();
-        if (repo.findByProperty(p).isPresent()) throw new IllegalArgumentException();
-        s.setProperty(p);
-        return repo.save(s);
+                                @RequestBody FacilityScore score) {
+        return facilityScoreService.createScore(propertyId, score);
     }
 
     @GetMapping("/{propertyId}")
     public FacilityScore get(@PathVariable Long propertyId) {
-        Property p = propertyRepo.findById(propertyId).orElseThrow();
-        return repo.findByProperty(p).orElseThrow();
+        return facilityScoreService.getScore(propertyId);
     }
 }
