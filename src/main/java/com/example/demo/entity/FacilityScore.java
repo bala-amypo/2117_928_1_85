@@ -1,75 +1,57 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "facility_scores")
+@Table(name = "facility_scores", uniqueConstraints = @UniqueConstraint(columnNames = "property_id"))
 public class FacilityScore {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private double hospitalProximity;
-
-    private double transportAccess;
-
-    private double safetyScore;
-
     @OneToOne
-    @JoinColumn(name = "property_id", nullable = false)
+    @JoinColumn(name = "property_id", nullable = false, unique = true)
     private Property property;
 
-    // ---------- Constructors ----------
+    @NotNull
+    @Min(0)
+    @Max(10)
+    private Integer schoolProximity;
 
-    public FacilityScore() {
-    }
+    @NotNull
+    @Min(0)
+    @Max(10)
+    private Integer hospitalProximity;
 
-    public FacilityScore(double hospitalProximity, double transportAccess, double safetyScore) {
-        this.hospitalProximity = hospitalProximity;
-        this.transportAccess = transportAccess;
-        this.safetyScore = safetyScore;
-    }
+    @NotNull
+    @Min(0)
+    @Max(10)
+    private Integer transportAccess;
 
-    // ---------- Getters & Setters ----------
+    @NotNull
+    @Min(0)
+    @Max(10)
+    private Integer safetyScore;
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Property getProperty() { return property; }
+    public void setProperty(Property property) { this.property = property; }
 
-    public double getHospitalProximity() {
-        return hospitalProximity;
-    }
+    public Integer getSchoolProximity() { return schoolProximity; }
+    public void setSchoolProximity(Integer schoolProximity) { this.schoolProximity = schoolProximity; }
 
-    public void setHospitalProximity(double hospitalProximity) {
-        this.hospitalProximity = hospitalProximity;
-    }
+    public Integer getHospitalProximity() { return hospitalProximity; }
+    public void setHospitalProximity(Integer hospitalProximity) { this.hospitalProximity = hospitalProximity; }
 
-    public double getTransportAccess() {
-        return transportAccess;
-    }
+    public Integer getTransportAccess() { return transportAccess; }
+    public void setTransportAccess(Integer transportAccess) { this.transportAccess = transportAccess; }
 
-    public void setTransportAccess(double transportAccess) {
-        this.transportAccess = transportAccess;
-    }
-
-    public double getSafetyScore() {
-        return safetyScore;
-    }
-
-    public void setSafetyScore(double safetyScore) {
-        this.safetyScore = safetyScore;
-    }
-
-    public Property getProperty() {
-        return property;
-    }
-
-    public void setProperty(Property property) {
-        this.property = property;
-    }
+    public Integer getSafetyScore() { return safetyScore; }
+    public void setSafetyScore(Integer safetyScore) { this.safetyScore = safetyScore; }
 }
