@@ -27,6 +27,18 @@ public class Property {
 
     @ManyToMany(mappedBy = "assignedProperties")
     private Set<User> assignedUsers = new HashSet<>();
+    @OneToOne(mappedBy = "property", cascade = CascadeType.ALL)
+    private RatingResult ratingResult;
+
+    public RatingResult getRatingResult() {
+    return ratingResult;
+}
+
+public void setRatingResult(RatingResult ratingResult) {
+    this.ratingResult = ratingResult;
+}
+
+
 
     public void addRatingLog(RatingLog log) {
         ratingLogs.add(log);

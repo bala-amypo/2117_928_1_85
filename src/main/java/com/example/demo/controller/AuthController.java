@@ -8,6 +8,8 @@ import org.springframework.http.*;
 import org.springframework.security.authentication.*;
 import org.springframework.security.crypto.password.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+
 
 import java.util.*;
 
