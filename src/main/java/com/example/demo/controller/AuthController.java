@@ -1,50 +1,78 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.*;
-import com.example.demo.entity.*;
-import com.example.demo.repository.*;
-import com.example.demo.security.*;
-import org.springframework.http.*;
-import org.springframework.security.authentication.*;
-import org.springframework.security.crypto.password.*;
-import org.springframework.web.bind.annotation.*;
+import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.RegisterRequest;
+import com.example.demo.entity.User;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.security.JwtTokenProvider;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-
-
-import java.util.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-
-    private final UserRepository repo;
-    private final PasswordEncoder encoder;
-    private final AuthenticationManager manager;
-    private final JwtTokenProvider jwt;
-
-    public AuthController(UserRepository repo, PasswordEncoder encoder, AuthenticationManager manager, JwtTokenProvider jwt) {
-        this.repo = repo;
-        this.encoder = encoder;
-        this.manager = manager;
-        this.jwt = jwt;
-    }
-
+    
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private JwtTokenProvider tokenProvider;
+    
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest r) {
-        User u = new User();
-        u.setName(r.getName());
-        u.setEmail(r.getEmail());
-        u.setRole(r.getRole());
-        u.setPassword(encoder.encode(r.getPassword()));
-        repo.save(u);
-        Authentication a = manager.authenticate(new UsernamePasswordAuthenticationToken(r.getEmail(), r.getPassword()));
-        return ResponseEntity.status(201).body(Map.of("token", jwt.generateToken(a, u)));
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            return ResponseEntity.badRequest().body("Email already exists");
+        }
+        
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(request.getRole());
+        
+        user = userRepository.save(user);
+        
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
+        
+        String token = tokenProvider.generateToken(authentication, user);
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("user", user);
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
+    
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest r) {
-        Authentication a = manager.authenticate(new UsernamePasswordAuthenticationToken(r.getEmail(), r.getPassword()));
-        User u = repo.findByEmail(r.getEmail()).orElseThrow();
-        return ResponseEntity.ok(Map.of("token", jwt.generateToken(a, u)));
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
+        
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        String token = tokenProvider.generateToken(authentication, user);
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("user", user);
+        
+        return ResponseEntity.ok(response);
     }
 }
