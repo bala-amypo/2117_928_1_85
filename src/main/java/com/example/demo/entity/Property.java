@@ -1,8 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Property {
@@ -14,8 +13,8 @@ public class Property {
     private String title;
     private String address;
     private String city;
-    private double price;
-    private double areaSqFt;
+    private Double price;
+    private Double areaSqFt;
 
     @OneToOne(mappedBy = "property", cascade = CascadeType.ALL)
     private FacilityScore facilityScore;
@@ -23,91 +22,25 @@ public class Property {
     @OneToOne(mappedBy = "property", cascade = CascadeType.ALL)
     private RatingResult ratingResult;
 
-    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
-    private Set<RatingLog> ratingLogs = new HashSet<>();
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RatingLog> ratingLogs = new ArrayList<>();
 
     @ManyToMany(mappedBy = "assignedProperties")
     private Set<User> assignedUsers = new HashSet<>();
 
-    // getters & setters
-
-    public Long getId() {
-        return id;
+    public void addRatingLog(RatingLog log) {
+        ratingLogs.add(log);
+        log.setProperty(this);
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Long getId() { return id; }
+    public String getCity() { return city; }
+    public Double getPrice() { return price; }
+    public Set<User> getAssignedUsers() { return assignedUsers; }
 
-    public String getTitle() {
-        return title;
-    }
-    
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-    
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getCity() {
-        return city;
-    }
-    
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-    
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public double getAreaSqFt() {
-        return areaSqFt;
-    }
-
-    public void setAreaSqFt(double areaSqFt) {
-        this.areaSqFt = areaSqFt;
-    }
-
-    public FacilityScore getFacilityScore() {
-        return facilityScore;
-    }
-
-    public void setFacilityScore(FacilityScore facilityScore) {
-        this.facilityScore = facilityScore;
-    }
-
-    public RatingResult getRatingResult() {
-        return ratingResult;
-    }
-
-    public void setRatingResult(RatingResult ratingResult) {
-        this.ratingResult = ratingResult;
-    }
-
-    public Set<RatingLog> getRatingLogs() {
-        return ratingLogs;
-    }
-
-    public void setRatingLogs(Set<RatingLog> ratingLogs) {
-        this.ratingLogs = ratingLogs;
-    }
-
-    public Set<User> getAssignedUsers() {
-        return assignedUsers;
-    }
-
-    public void setAssignedUsers(Set<User> assignedUsers) {
-        this.assignedUsers = assignedUsers;
-    }
+    public void setTitle(String title) { this.title = title; }
+    public void setAddress(String address) { this.address = address; }
+    public void setCity(String city) { this.city = city; }
+    public void setPrice(Double price) { this.price = price; }
+    public void setAreaSqFt(Double areaSqFt) { this.areaSqFt = areaSqFt; }
 }
