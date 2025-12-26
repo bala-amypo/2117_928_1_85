@@ -1,19 +1,15 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Property;
-import com.example.demo.repository.PropertyRepository;
-import org.springframework.stereotype.Service;
+import java.util.List;
 
-@Service
-public class PropertyService {
+public interface PropertyService {
 
-    private final PropertyRepository repository;
+    Property save(Property property);
 
-    public PropertyService(PropertyRepository repository) {
-        this.repository = repository;
-    }
+    List<Property> findAll();
 
-    public Property addProperty(Property property) {
-        return repository.save(property);
-    }
+    Property findById(Long id);
+
+    void delete(Long id);
 }
