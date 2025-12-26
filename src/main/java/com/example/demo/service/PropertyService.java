@@ -1,15 +1,24 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Property;
-import java.util.List;
+import com.example.demo.exception.BadRequestException;
+import com.example.demo.repository.PropertyRepository;
+import jakarta.validation.Valid;
+import org.springframework.stereotype.Service;
 
-public interface PropertyService {
+@Service
+public class PropertyService {
 
-    Property save(Property property);
+    private final PropertyRepository propertyRepository;
 
-    List<Property> findAll();
+    public PropertyService(PropertyRepository propertyRepository) {
+        this.propertyRepository = propertyRepository;
+    }
 
-    Property findById(Long id);
-
-    void delete(Long id);
+    public Property addProperty(@Valid Property property) {
+        if (property.getPrice() <= 0) {
+            throw new BadRequestException("Invalid price");
+        }
+        return propertyRepository.save(property);
+    }
 }
