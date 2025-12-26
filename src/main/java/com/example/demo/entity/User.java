@@ -25,7 +25,6 @@ public class User {
     private Set<Property> assignedProperties = new HashSet<>();
 
     public Long getId() { return id; }
-    public String getName() { return name; }
     public String getEmail() { return email; }
     public String getPassword() { return password; }
     public String getRole() { return role; }

@@ -16,7 +16,7 @@ public class RatingLog {
     @ManyToOne
     private Property property;
 
-    public void setMessage(String message) { this.message = message; }
-    public void setProperty(Property property) { this.property = property; }
+    public void setMessage(String m) { this.message = m; }
+    public void setProperty(Property p) { this.property = p; }
     public LocalDateTime getLoggedAt() { return loggedAt; }
 }

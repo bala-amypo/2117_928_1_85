@@ -24,7 +24,7 @@ public class RatingResult {
     public String getRatingCategory() { return ratingCategory; }
     public LocalDateTime getRatedAt() { return ratedAt; }
 
-    public void setProperty(Property property) { this.property = property; }
-    public void setFinalRating(Double finalRating) { this.finalRating = finalRating; }
-    public void setRatingCategory(String ratingCategory) { this.ratingCategory = ratingCategory; }
+    public void setProperty(Property p) { this.property = p; }
+    public void setFinalRating(Double r) { this.finalRating = r; }
+    public void setRatingCategory(String c) { this.ratingCategory = c; }
 }

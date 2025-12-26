@@ -38,9 +38,9 @@ public class Property {
     public Double getPrice() { return price; }
     public Set<User> getAssignedUsers() { return assignedUsers; }
 
-    public void setTitle(String title) { this.title = title; }
-    public void setAddress(String address) { this.address = address; }
-    public void setCity(String city) { this.city = city; }
-    public void setPrice(Double price) { this.price = price; }
-    public void setAreaSqFt(Double areaSqFt) { this.areaSqFt = areaSqFt; }
+    public void setTitle(String t) { this.title = t; }
+    public void setAddress(String a) { this.address = a; }
+    public void setCity(String c) { this.city = c; }
+    public void setPrice(Double p) { this.price = p; }
+    public void setAreaSqFt(Double a) { this.areaSqFt = a; }
 }

@@ -28,7 +28,7 @@ public class FacilityScore {
     public Property getProperty() { return property; }
     public int getSchoolProximity() { return schoolProximity; }
 
-    public void setProperty(Property property) { this.property = property; }
+    public void setProperty(Property p) { this.property = p; }
     public void setSchoolProximity(int v) { this.schoolProximity = v; }
     public void setHospitalProximity(int v) { this.hospitalProximity = v; }
     public void setTransportAccess(int v) { this.transportAccess = v; }
