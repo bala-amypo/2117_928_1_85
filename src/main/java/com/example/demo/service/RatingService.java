@@ -13,7 +13,7 @@ public class RatingService {
     @Autowired
     private RatingResultRepository ratingResultRepository;
 
-    public RatingResult generateRating(Property property, FacilityScore s) {
+    public RatingResult generate(Property property, FacilityScore s) {
         double finalRating = (s.getSchoolProximity() + s.getHospitalProximity() + s.getTransportAccess() + s.getSafetyScore()) / 4.0;
 
         RatingResult rr = new RatingResult();
