@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/scores")
-@Tag(name = "Facility Score")
+@Tag(name = "Facility Score")`
 public class FacilityScoreController {
 
     private final FacilityScoreService service;
