@@ -2,59 +2,66 @@ package com.example.demo.security;
 
 import com.example.demo.entity.User;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-
-import jakarta.servlet.http.HttpServletRequest;
+import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
-
-    @Value("${jwt.secret:secret}")
+    
+    @Value("${jwt.secret}")
     private String jwtSecret;
-
-    @Value("${jwt.expiration:3600000}")
-    private long validityInMs;
-
-    public String generateToken(Authentication auth, User user) {
-        Date now = new Date();
-        Date expiry = new Date(now.getTime() + validityInMs);
-
+    
+    @Value("${jwt.expiration}")
+    private int jwtExpirationInMs;
+    
+    private Key getSigningKey() {
+        return Keys.hmacShaKeyFor(jwtSecret.getBytes());
+    }
+    
+    public String generateToken(Authentication authentication, User user) {
+        Date expiryDate = new Date(System.currentTimeMillis() + jwtExpirationInMs);
+        
         return Jwts.builder()
-                .setSubject(user.getId().toString())
-                .claim("email", user.getEmail())
+                .setSubject(user.getEmail())
+                .claim("userId", user.getId())
                 .claim("role", user.getRole())
-                .setIssuedAt(now)
-                .setExpiration(expiry)
-                .signWith(SignatureAlgorithm.HS256, jwtSecret)
+                .setIssuedAt(new Date())
+                .setExpiration(expiryDate)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                 .compact();
     }
-
-    public String resolveToken(HttpServletRequest req) {
-        String bearer = req.getHeader("Authorization");
-        if (bearer != null && bearer.startsWith("Bearer ")) return bearer.substring(7);
-        return null;
+    
+    public String getEmailFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.getSubject();
     }
-
-    public boolean validateToken(String token) {
+    
+    public Long getUserIdFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return Long.valueOf(claims.get("userId").toString());
+    }
+    
+    public boolean validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+            Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(authToken);
             return true;
-        } catch (JwtException | IllegalArgumentException ex) {
+        } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
-    }
-
-    public Authentication getAuthentication(String token) {
-        Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
-        return new UsernamePasswordAuthenticationToken(claims.get("email"), null, null);
-    }
-
-    public Long getUserIdFromToken(String token) {
-        Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
-        return Long.parseLong(claims.getSubject());
     }
 }
