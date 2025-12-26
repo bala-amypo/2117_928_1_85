@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "rating_results")
@@ -21,6 +22,9 @@ public class RatingResult {
     @NotNull
     private String ratingCategory;
 
+    @NotNull
+    private LocalDateTime ratedAt;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -32,4 +36,7 @@ public class RatingResult {
 
     public String getRatingCategory() { return ratingCategory; }
     public void setRatingCategory(String ratingCategory) { this.ratingCategory = ratingCategory; }
+
+    public LocalDateTime getRatedAt() { return ratedAt; }
+    public void setRatedAt(LocalDateTime ratedAt) { this.ratedAt = ratedAt; }
 }
