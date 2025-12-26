@@ -1,30 +1,35 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
+@Table(name = "rating_results")
 public class RatingResult {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Double finalRating;
-    private String ratingCategory;
-
     @OneToOne
-    @JoinColumn(name = "property_id")
+    @JoinColumn(name = "property_id", nullable = false, unique = true)
     private Property property;
 
-    private LocalDateTime ratedAt = LocalDateTime.now();
+    @NotNull
+    private Double finalRating;
+
+    @NotNull
+    private String ratingCategory;
 
     public Long getId() { return id; }
-    public Double getFinalRating() { return finalRating; }
-    public String getRatingCategory() { return ratingCategory; }
-    public LocalDateTime getRatedAt() { return ratedAt; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setProperty(Property p) { this.property = p; }
-    public void setFinalRating(Double r) { this.finalRating = r; }
-    public void setRatingCategory(String c) { this.ratingCategory = c; }
+    public Property getProperty() { return property; }
+    public void setProperty(Property property) { this.property = property; }
+
+    public Double getFinalRating() { return finalRating; }
+    public void setFinalRating(Double finalRating) { this.finalRating = finalRating; }
+
+    public String getRatingCategory() { return ratingCategory; }
+    public void setRatingCategory(String ratingCategory) { this.ratingCategory = ratingCategory; }
 }
