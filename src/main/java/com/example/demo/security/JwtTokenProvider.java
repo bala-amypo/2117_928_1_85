@@ -2,50 +2,25 @@ package com.example.demo.security;
 
 import com.example.demo.entity.User;
 import io.jsonwebtoken.*;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
+import java.util.*;
 
 @Component
 public class JwtTokenProvider {
 
-    private final String jwtSecret = "secretkey123456";
-    private final long jwtExpirationMs = 86400000;
+    private final String secret = "secret";
 
-    public String generateToken(Authentication authentication, User user) {
-
+    public String generateToken(Authentication auth, User user) {
         return Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim("userId", user.getId())
+                .setSubject(user.getEmail())
+                .claim("id", user.getId())
                 .claim("role", user.getRole())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
     }
 
-    public String getEmailFromToken(String token) {
-        return getClaims(token).getSubject();
-    }
-
     public Long getUserIdFromToken(String token) {
-        return getClaims(token).get("userId", Long.class);
-    }
-
-    public boolean validateToken(String token) {
-        try {
-            getClaims(token);
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
-    }
-
-    private Claims getClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(token)
-                .getBody();
+        return ((Number) Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("id")).longValue();
     }
 }

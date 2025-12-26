@@ -1,71 +1,48 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AuthResponse;
-import com.example.demo.dto.LoginRequest;
-import com.example.demo.dto.RegisterRequest;
-import com.example.demo.entity.User;
-import com.example.demo.security.JwtTokenProvider;
-import com.example.demo.service.UserService;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import com.example.demo.dto.*;
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
+import com.example.demo.security.*;
+import org.springframework.http.*;
+import org.springframework.security.authentication.*;
+import org.springframework.security.crypto.password.*;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserService userService;
-    private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final UserRepository repo;
+    private final PasswordEncoder encoder;
+    private final AuthenticationManager manager;
+    private final JwtTokenProvider jwt;
 
-    public AuthController(UserService userService,
-                          AuthenticationManager authenticationManager,
-                          JwtTokenProvider jwtTokenProvider) {
-        this.userService = userService;
-        this.authenticationManager = authenticationManager;
-        this.jwtTokenProvider = jwtTokenProvider;
+    public AuthController(UserRepository repo, PasswordEncoder encoder, AuthenticationManager manager, JwtTokenProvider jwt) {
+        this.repo = repo;
+        this.encoder = encoder;
+        this.manager = manager;
+        this.jwt = jwt;
     }
 
     @PostMapping("/register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public AuthResponse register(@RequestBody @Valid RegisterRequest request) {
-
-        User user = new User();
-        user.setName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
-        user.setRole(request.getRole());
-
-        User saved = userService.register(user);
-
-        Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-
-        String token = jwtTokenProvider.generateToken(auth, saved);
-        return new AuthResponse(token);
+    public ResponseEntity<?> register(@RequestBody RegisterRequest r) {
+        User u = new User();
+        u.setName(r.getName());
+        u.setEmail(r.getEmail());
+        u.setRole(r.getRole());
+        u.setPassword(encoder.encode(r.getPassword()));
+        repo.save(u);
+        Authentication a = manager.authenticate(new UsernamePasswordAuthenticationToken(r.getEmail(), r.getPassword()));
+        return ResponseEntity.status(201).body(Map.of("token", jwt.generateToken(a, u)));
     }
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody LoginRequest request) {
-
-        Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-
-        User user = new User();
-        user.setEmail(request.getEmail());
-
-        String token = jwtTokenProvider.generateToken(auth, user);
-        return new AuthResponse(token);
+    public ResponseEntity<?> login(@RequestBody LoginRequest r) {
+        Authentication a = manager.authenticate(new UsernamePasswordAuthenticationToken(r.getEmail(), r.getPassword()));
+        User u = repo.findByEmail(r.getEmail()).orElseThrow();
+        return ResponseEntity.ok(Map.of("token", jwt.generateToken(a, u)));
     }
 }
