@@ -1,33 +1,43 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.RatingLog;
-import com.example.demo.service.RatingLogService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
-@RequestMapping("/logs")
-@Tag(name = "Rating Logs")
-public class RatingLogController {
+@RequestMapping("/ratings")
+public class RatingController {
 
-    private final RatingLogService service;
+    private final PropertyRepository propertyRepo;
+    private final FacilityScoreRepository scoreRepo;
+    private final RatingResultRepository resultRepo;
 
-    public RatingLogController(RatingLogService service) {
-        this.service = service;
+    public RatingController(PropertyRepository propertyRepo,
+                            FacilityScoreRepository scoreRepo,
+                            RatingResultRepository resultRepo) {
+        this.propertyRepo = propertyRepo;
+        this.scoreRepo = scoreRepo;
+        this.resultRepo = resultRepo;
     }
 
-    @PostMapping("/{propertyId}")
-    @Operation(summary = "Add rating log")
-    public RatingLog add(@PathVariable Long propertyId,
-                         @RequestParam String message) {
-        return service.addLog(propertyId, message);
+    @PostMapping("/generate/{propertyId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public RatingResult generate(@PathVariable Long propertyId) {
+        Property p = propertyRepo.findById(propertyId).orElseThrow();
+        FacilityScore s = scoreRepo.findByProperty(p).orElseThrow();
+        double avg = (s.getSchoolProximity() + s.getHospitalProximity()
+                + s.getTransportAccess() + s.getSafetyScore()) / 4.0;
+        RatingResult r = new RatingResult();
+        r.setProperty(p);
+        r.setFinalRating(avg);
+        r.setRatingCategory(avg >= 8 ? "EXCELLENT" : avg >= 6 ? "GOOD" : "POOR");
+        return resultRepo.save(r);
     }
 
     @GetMapping("/property/{propertyId}")
-    @Operation(summary = "View logs for property")
-    public List<RatingLog> logs(@PathVariable Long propertyId) {
-        return service.getLogs(propertyId);
+    public RatingResult get(@PathVariable Long propertyId) {
+        Property p = propertyRepo.findById(propertyId).orElseThrow();
+        return resultRepo.findByProperty(p).orElseThrow();
     }
 }
