@@ -20,35 +20,37 @@ public class RatingLog {
 
     @PrePersist
     public void onCreate() {
-        loggedAt = LocalDateTime.now();
+        this.loggedAt = LocalDateTime.now();
     }
+
+    // getters & setters
 
     public Long getId() {
         return id;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public LocalDateTime getLoggedAt() {
-        return loggedAt;
-    }
-
-    public Property getProperty() {
-        return property;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
+    public String getMessage() {
+        return message;
+    }
+    
     public void setMessage(String message) {
         this.message = message;
     }
 
+    public LocalDateTime getLoggedAt() {
+        return loggedAt;
+    }
+
     public void setLoggedAt(LocalDateTime loggedAt) {
         this.loggedAt = loggedAt;
+    }
+
+    public Property getProperty() {
+        return property;
     }
 
     public void setProperty(Property property) {

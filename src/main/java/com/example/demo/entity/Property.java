@@ -1,9 +1,8 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Property {
@@ -12,112 +11,100 @@ public class Property {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     private String title;
-
-    @NotBlank
     private String address;
-
-    @NotBlank
     private String city;
+    private double price;
+    private double areaSqFt;
 
-    @Min(1)
-    private Double price;
-
-    @Min(100)
-    private Double areaSqFt;
-
-    @OneToOne(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "property", cascade = CascadeType.ALL)
     private FacilityScore facilityScore;
 
-    @OneToOne(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "property", cascade = CascadeType.ALL)
     private RatingResult ratingResult;
 
-    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RatingLog> ratingLogs = new ArrayList<>();
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
+    private Set<RatingLog> ratingLogs = new HashSet<>();
 
     @ManyToMany(mappedBy = "assignedProperties")
     private Set<User> assignedUsers = new HashSet<>();
 
-    public void addRatingLog(RatingLog log) {
-        log.setProperty(this);
-        this.ratingLogs.add(log);
-    }
+    // getters & setters
 
     public Long getId() {
         return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public Double getAreaSqFt() {
-        return areaSqFt;
-    }
-
-    public FacilityScore getFacilityScore() {
-        return facilityScore;
-    }
-
-    public RatingResult getRatingResult() {
-        return ratingResult;
-    }
-
-    public List<RatingLog> getRatingLogs() {
-        return ratingLogs;
-    }
-
-    public Set<User> getAssignedUsers() {
-        return assignedUsers;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
+    public String getTitle() {
+        return title;
+    }
+    
     public void setTitle(String title) {
         this.title = title;
     }
 
+    public String getAddress() {
+        return address;
+    }
+    
     public void setAddress(String address) {
         this.address = address;
     }
 
+    public String getCity() {
+        return city;
+    }
+    
     public void setCity(String city) {
         this.city = city;
     }
 
-    public void setPrice(Double price) {
+    public double getPrice() {
+        return price;
+    }
+    
+    public void setPrice(double price) {
         this.price = price;
     }
 
-    public void setAreaSqFt(Double areaSqFt) {
+    public double getAreaSqFt() {
+        return areaSqFt;
+    }
+
+    public void setAreaSqFt(double areaSqFt) {
         this.areaSqFt = areaSqFt;
+    }
+
+    public FacilityScore getFacilityScore() {
+        return facilityScore;
     }
 
     public void setFacilityScore(FacilityScore facilityScore) {
         this.facilityScore = facilityScore;
     }
 
+    public RatingResult getRatingResult() {
+        return ratingResult;
+    }
+
     public void setRatingResult(RatingResult ratingResult) {
         this.ratingResult = ratingResult;
     }
 
-    public void setRatingLogs(List<RatingLog> ratingLogs) {
+    public Set<RatingLog> getRatingLogs() {
+        return ratingLogs;
+    }
+
+    public void setRatingLogs(Set<RatingLog> ratingLogs) {
         this.ratingLogs = ratingLogs;
+    }
+
+    public Set<User> getAssignedUsers() {
+        return assignedUsers;
     }
 
     public void setAssignedUsers(Set<User> assignedUsers) {
